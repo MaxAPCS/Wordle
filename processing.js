@@ -403,6 +403,55 @@
     }
     return ArrayList
   }();
+  class HashSet {
+    constructor() {
+      this.internal = new Set();
+    }
+    add(o) {
+      const oldA = new Set(internal);
+      internal.add(o);
+      return oldA !== internal;
+    }
+    addAll(c) {
+      const oldA = new Set(internal);
+      internal = internal.union(c);
+      return oldA !== internal;
+    }
+    clear() {
+      internal.clear()
+    }
+    contains(o) {
+      return internal.has(o)
+    }
+    containsAll(o) {
+      return internal.isSupersetOf(o)
+    }
+    isEmpty() {
+      return internal.length === 0
+    }
+    iterator() {
+      return new Iterator(conversion, removeItem)
+    }
+    remove(o) {
+      return internal.remove(o);
+    }
+    removeAll(c) {
+      const oldA = new Set(internal);
+      internal = internal.difference(c);
+      return oldA !== internal;
+    }
+    retainAll(c) {
+      const oldA = new Set(internal);
+      internal = internal.intersection(c);
+      return oldA !== internal;
+    }
+    size() {
+      return internal.length
+    }
+    toArray() {
+      return [...internal]
+    }
+  }
   var HashMap = function() {
     function HashMap() {
       if (arguments.length === 1 && arguments[0] instanceof HashMap) return arguments[0].clone();
@@ -464,61 +513,53 @@
         };
         findNext()
       }
-      function Set(conversion, isIn, removeItem) {
-        this.clear = function() {
-          hashMap.clear()
-        };
-        this.contains = function(o) {
-          return isIn(o)
-        };
-        this.containsAll = function(o) {
-          var it = o.iterator();
-          while (it.hasNext()) if (!this.contains(it.next())) return false;
-          return true
-        };
-        this.isEmpty = function() {
-          return hashMap.isEmpty()
-        };
-        this.iterator = function() {
+      class Set {
+      	constructor(conversion, isIn, removeItem) {
+      		this.internal = new Set();
+      	}
+      	add(o) {
+          const oldA = new Set(internal);
+      	  internal.add(o);
+          return oldA !== internal;
+      	}
+      	addAll(c) {
+          const oldA = new Set(internal);
+          internal = internal.union(c);
+          return oldA !== internal;
+      	}
+        clear() {
+          internal.clear()
+        }
+        contains(o) {
+          return internal.has(o)
+        }
+        containsAll(o) {
+          return internal.isSupersetOf(o)
+        }
+        isEmpty() {
+          return internal.length === 0
+        }
+        iterator() {
           return new Iterator(conversion, removeItem)
-        };
-        this.remove = function(o) {
-          if (this.contains(o)) {
-            removeItem(o);
-            return true
-          }
-          return false
-        };
-        this.removeAll = function(c) {
-          var it = c.iterator();
-          var changed = false;
-          while (it.hasNext()) {
-            var item = it.next();
-            if (this.contains(item)) {
-              removeItem(item);
-              changed = true
-            }
-          }
-          return true
-        };
-        this.retainAll = function(c) {
-          var it = this.iterator();
-          var toRemove = [];
-          while (it.hasNext()) {
-            var entry = it.next();
-            if (!c.contains(entry)) toRemove.push(entry)
-          }
-          for (var i = 0; i < toRemove.length; ++i) removeItem(toRemove[i]);
-          return toRemove.length > 0
-        };
-        this.size = function() {
-          return hashMap.size()
-        };
-        this.toArray = function() {
-          var result = [];
-          var it = this.iterator();
-          while (it.hasNext()) result.push(it.next());
-          return result
+        }
+        remove(o) {
+          return internal.remove(o);
+        }
+        removeAll(c) {
+          const oldA = new Set(internal);
+          internal = internal.difference(c);
+          return oldA !== internal;
+        }
+        retainAll(c) {
+       	  const oldA = new Set(internal);
+          internal = internal.intersection(c);
+          return oldA !== internal;
+        }
+        size() {
+          return internal.length
+        }
+        toArray() {
+          return [...internal]
         }
       }
       function Entry(pair) {
