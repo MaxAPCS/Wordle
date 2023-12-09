@@ -857,6 +857,7 @@
   DefaultScope.prototype = PConstants;
   var defaultScope = new DefaultScope;
   defaultScope.ArrayList = ArrayList;
+  defaultScope.HashSet = HashSet;
   defaultScope.HashMap = HashMap;
   defaultScope.PVector = PVector;
   defaultScope.ObjectIterator = ObjectIterator;
