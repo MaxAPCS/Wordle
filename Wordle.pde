@@ -11,9 +11,8 @@ char[] currWord = new char[5];
 int currPos = 0;
 
 void setup() {
-  for (String word : loadStrings("https://gist.githubusercontent.com/dracos/dd0668f281e685bad51479e5acaadb93/raw/6bfa15d263d6d5b63840a8e5b64e04b382fdb079/valid-wordle-words.txt")) words.add(word);
+  for (String word : loadStrings("./valid-wordle-words.txt")) words.add(word);
   word = words.toArray(new String[words.size()])[(int)(Math.random()*words.size())];
-  print(word);
   size(500, 600);
   textSize(64);
   textAlign(CENTER, CENTER);
