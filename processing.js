@@ -408,48 +408,48 @@
       this.internal = new Set();
     }
     add(o) {
-      const oldA = new Set(internal);
-      internal.add(o);
-      return oldA !== internal;
+      const oldA = new Set(this.internal);
+      this.internal.add(o);
+      return oldA !== this.internal;
     }
     addAll(c) {
-      const oldA = new Set(internal);
-      internal = internal.union(c);
-      return oldA !== internal;
+      const oldA = new Set(this.internal);
+      this.internal = this.internal.union(c);
+      return oldA !== this.internal;
     }
     clear() {
-      internal.clear()
+      this.internal.clear()
     }
     contains(o) {
-      return internal.has(o)
+      return this.internal.has(o)
     }
     containsAll(o) {
-      return internal.isSupersetOf(o)
+      return this.internal.isSupersetOf(o)
     }
     isEmpty() {
-      return internal.length === 0
+      return this.internal.length === 0
     }
-    iterator() {
-      return new Iterator(conversion, removeItem)
-    }
+    // iterator() {
+    //   return new Iterator(conversion, removeItem)
+    // }
     remove(o) {
-      return internal.remove(o);
+      return this.internal.remove(o);
     }
     removeAll(c) {
-      const oldA = new Set(internal);
-      internal = internal.difference(c);
-      return oldA !== internal;
+      const oldA = new Set(this.internal);
+      this.internal = this.internal.difference(c);
+      return oldA !== this.internal;
     }
     retainAll(c) {
-      const oldA = new Set(internal);
-      internal = internal.intersection(c);
-      return oldA !== internal;
+      const oldA = new Set(this.internal);
+      this.internal = this.internal.intersection(c);
+      return oldA !== this.internal;
     }
     size() {
-      return internal.length
+      return this.internal.length
     }
     toArray() {
-      return [...internal]
+      return [...this.internal]
     }
   }
   var HashMap = function() {
@@ -513,53 +513,61 @@
         };
         findNext()
       }
-      class Set {
-      	constructor(conversion, isIn, removeItem) {
-      		this.internal = new Set();
-      	}
-      	add(o) {
-          const oldA = new Set(internal);
-      	  internal.add(o);
-          return oldA !== internal;
-      	}
-      	addAll(c) {
-          const oldA = new Set(internal);
-          internal = internal.union(c);
-          return oldA !== internal;
-      	}
-        clear() {
-          internal.clear()
-        }
-        contains(o) {
-          return internal.has(o)
-        }
-        containsAll(o) {
-          return internal.isSupersetOf(o)
-        }
-        isEmpty() {
-          return internal.length === 0
-        }
-        iterator() {
+      function Set(conversion, isIn, removeItem) {
+        this.clear = function() {
+          hashMap.clear()
+        };
+        this.contains = function(o) {
+          return isIn(o)
+        };
+        this.containsAll = function(o) {
+          var it = o.iterator();
+          while (it.hasNext()) if (!this.contains(it.next())) return false;
+          return true
+        };
+        this.isEmpty = function() {
+          return hashMap.isEmpty()
+        };
+        this.iterator = function() {
           return new Iterator(conversion, removeItem)
-        }
-        remove(o) {
-          return internal.remove(o);
-        }
-        removeAll(c) {
-          const oldA = new Set(internal);
-          internal = internal.difference(c);
-          return oldA !== internal;
-        }
-        retainAll(c) {
-       	  const oldA = new Set(internal);
-          internal = internal.intersection(c);
-          return oldA !== internal;
-        }
-        size() {
-          return internal.length
-        }
-        toArray() {
-          return [...internal]
+        };
+        this.remove = function(o) {
+          if (this.contains(o)) {
+            removeItem(o);
+            return true
+          }
+          return false
+        };
+        this.removeAll = function(c) {
+          var it = c.iterator();
+          var changed = false;
+          while (it.hasNext()) {
+            var item = it.next();
+            if (this.contains(item)) {
+              removeItem(item);
+              changed = true
+            }
+          }
+          return true
+        };
+        this.retainAll = function(c) {
+          var it = this.iterator();
+          var toRemove = [];
+          while (it.hasNext()) {
+            var entry = it.next();
+            if (!c.contains(entry)) toRemove.push(entry)
+          }
+          for (var i = 0; i < toRemove.length; ++i) removeItem(toRemove[i]);
+          return toRemove.length > 0
+        };
+        this.size = function() {
+          return hashMap.size()
+        };
+        this.toArray = function() {
+          var result = [];
+          var it = this.iterator();
+          while (it.hasNext()) result.push(it.next());
+          return result
         }
       }
       function Entry(pair) {
@@ -1655,6 +1663,8 @@
     Char.prototype.valueOf = function() {
       return this.code
     };
+    Char.toLowerCase = (chr) => new Char(chr.toString().toLowerCase());
+    Char.toUpperCase = (chr) => new Char(chr.toString().toUpperCase());
     var PShape = p.PShape = function(family) {
       this.family = family || 0;
       this.visible = true;
