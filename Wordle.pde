@@ -1,6 +1,8 @@
 import java.util.Set;
 import java.util.HashSet;
 
+/* @pjs globalKeyEvents="true"; */
+
 final Set<String> words = new HashSet();
 String word;
 
@@ -11,13 +13,13 @@ char[] currWord = new char[5];
 int currPos = 0;
 
 void setup() {
-  for (String word : loadStrings("./valid-wordle-words.txt")) words.add(word);
-  word = words.toArray(new String[words.size()])[(int)(Math.random()*words.size())];
   size(500, 600);
+  for (String word : loadStrings("./valid-wordle-words.txt")) words.add(word);
+  background(10, 10, 10);
+  word = words.toArray(new String[words.size()])[(int)(Math.random()*words.size())];
   textSize(64);
   textAlign(CENTER, CENTER);
   noLoop();
-  background(10, 10, 10);
   rowmode = true;
 }
 

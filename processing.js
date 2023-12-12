@@ -10086,7 +10086,7 @@
     this.attachFunction = attachFunction;
     this.options = {
       pauseOnBlur: false,
-      globalKeyEvents: false
+      globalKeyEvents: true // TODO so i dont have to load it myself
     };
     this.onLoad = nop;
     this.onSetup = nop;
